@@ -1,0 +1,16 @@
+use_default_settings: true
+
+general:
+  instance_name: "Trovia"
+
+search:
+  formats:
+    - html
+    - json
+
+server:
+  # Local automated queries must never be blocked.
+  limiter: false
+  public_instance: false
+  # Set via SEARXNG_SECRET in .env
+  secret_key: "overridden-by-env"

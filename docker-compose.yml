@@ -1,0 +1,39 @@
+name: trovia
+
+services:
+  trovia:
+    build: .
+    image: trovia:local
+    container_name: trovia-api
+    ports:
+      - "127.0.0.1:8000:8000"
+    env_file:
+      - path: .env
+        required: false # optional: copy .env.example to .env to add API keys
+    environment:
+      - SEARXNG_URL=${SEARXNG_URL:-}
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "/app/.venv/bin/python", "-c", "import urllib.request as u; u.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    restart: unless-stopped
+
+  # Optional, advanced: a self-hosted metasearch engine used as an extra search provider.
+  # Start it with:  docker compose --profile searxng up -d
+  # and set SEARXNG_URL=http://searxng:8080/search in .env so the API uses it.
+  searxng:
+    profiles: ["searxng"]
+    image: searxng/searxng:latest
+    container_name: trovia-searxng
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./searxng:/etc/searxng:rw
+    environment:
+      - SEARXNG_SECRET=${SEARXNG_SECRET:-change-me-please}
+      - SEARXNG_BASE_URL=http://localhost:8080/
+    restart: unless-stopped

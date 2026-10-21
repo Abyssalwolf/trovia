@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: tests (${{ matrix.os }}, Python ${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --extra dev --python ${{ matrix.python }}
+      - run: uv run pytest -q
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv build
+      - run: uvx twine check dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  # Runs the real one-line installers against the freshly built wheel on each OS,
+  # in throwaway folders, then uses the installed `trovia` command.
+  install-scripts:
+    name: installer (${{ matrix.os }})
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    env:
+      TROVIA_NO_SETUP: "1"
+      TROVIA_NO_MODIFY_PATH: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: Install (macOS and Linux)
+        if: runner.os != 'Windows'
+        run: |
+          export UV_TOOL_DIR="$RUNNER_TEMP/tools" UV_TOOL_BIN_DIR="$RUNNER_TEMP/bin"
+          export TROVIA_PACKAGE="$(ls "$PWD"/dist/*.whl)"
+          sh scripts/install.sh
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+      - name: Install (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $env:UV_TOOL_DIR = "$env:RUNNER_TEMP\tools"; $env:UV_TOOL_BIN_DIR = "$env:RUNNER_TEMP\bin"
+          $env:TROVIA_PACKAGE = (Get-ChildItem dist\*.whl).FullName
+          Get-Content scripts\install.ps1 -Raw | Invoke-Expression
+          "$env:RUNNER_TEMP\bin" | Out-File -Append -Encoding utf8 $env:GITHUB_PATH
+      - name: Use the installed command
+        shell: bash
+        env:
+          TROVIA_CONFIG_DIR: ${{ runner.temp }}/trovia-config
+          TROVIA_DATA_DIR: ${{ runner.temp }}/trovia-data
+        run: |
+          trovia --version
+          trovia setup --yes
+          trovia config set top_k_chunks 9
+          trovia config show
+          trovia config path
