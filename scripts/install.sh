@@ -38,7 +38,7 @@ fi
 command -v uv >/dev/null 2>&1 || fail "uv is still not on PATH after installing it; open a new terminal and run this again"
 
 # 2. trovia (uv fetches a suitable Python itself if you have none)
-uv tool install --upgrade "$PACKAGE" || fail "could not install $PACKAGE"
+uv tool install --upgrade --python ">=3.11,<3.15" "$PACKAGE" || fail "could not install $PACKAGE"
 BIN_DIR="$(uv tool dir --bin)"
 
 # 3. PATH

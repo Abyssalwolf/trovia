@@ -97,7 +97,9 @@ keeps its cache and model in `./data`. To add SearXNG, see
 
 - Windows, macOS or Linux, with internet access (for searching and, once, for the model download).
 - About 400 MB of free memory while running, and a few hundred MB of disk for the install.
-- Python 3.11 or newer is only needed if you install with pip or pipx yourself; uv fetches its own.
+- Python 3.11 to 3.14 is only needed if you install with pip or pipx yourself; the installers ask uv
+  for a compatible Python and it downloads one if you have none. Python 3.15 and newer are not
+  supported yet, because the reranker's runtime (onnxruntime) has no builds for them.
 
 ## Troubleshooting the install
 

@@ -39,7 +39,9 @@ The REST API, the MCP server and the `trovia search` command are thin wrappers: 
 
 ## Running from source
 
-You need Python 3.11+ and [uv](https://docs.astral.sh/uv/).
+You need Python 3.11 to 3.14 and [uv](https://docs.astral.sh/uv/). The upper limit comes from
+onnxruntime (used by the reranker), which has no wheels for Python 3.15 yet. When it does, raise
+`requires-python` in `pyproject.toml` and the `--python` range in both install scripts.
 
 ```bash
 uv sync --extra dev          # install runtime and test dependencies

@@ -1,3 +1,4 @@
+import os
 import socket
 
 import httpx
@@ -261,6 +262,10 @@ def test_port_check_is_not_fooled_by_time_wait_after_a_server_stops():
     import time
 
     server = socket.socket()
+    if os.name == "posix":
+        # Behave like uvicorn, whose listener sets SO_REUSEADDR. Linux only lets a new bind
+        # through a TIME_WAIT socket when both sockets set it (checked on real Linux).
+        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server.bind(("127.0.0.1", 0))
     port = server.getsockname()[1]
     server.listen()

@@ -7,7 +7,7 @@ name = "trovia"
 version = "0.1.0"
 description = "A local web search and page-reading service for AI agents, with a REST API and an MCP tool"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.15"  # onnxruntime (via flashrank) has no wheels for newer Python yet
 keywords = ["search", "mcp", "llm", "agents", "rag", "web-search"]
 classifiers = [
     "Development Status :: 4 - Beta",

@@ -41,7 +41,7 @@ if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
 }
 
 # 2. trovia (uv fetches a suitable Python itself if you have none)
-uv tool install --upgrade $package
+uv tool install --upgrade --python ">=3.11,<3.15" $package
 if ($LASTEXITCODE -ne 0) { Fail "could not install $package" }
 $binDir = (uv tool dir --bin | Out-String).Trim()
 
