@@ -1,0 +1,54 @@
+name: Pages
+
+# Publishes the website, the one-line installers and the zipped agent skills to
+# https://abyssalwolf.github.io/trovia/ from what is on main, so the hosted install
+# scripts always match the repository.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "scripts/**"
+      - "skills/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble the site
+        run: |
+          mkdir -p _site/skills
+          cp -r site/. _site/
+          cp scripts/install.sh scripts/install.ps1 _site/
+          cd skills
+          for skill in trovia-mcp trovia-rest-api; do
+            zip -qr "../_site/skills/$skill.zip" "$skill"
+          done
+          cd ..
+          ls -R _site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

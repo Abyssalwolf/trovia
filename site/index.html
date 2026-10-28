@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Trovia: local web search for AI agents</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Trovia is free, open-source web search for AI agents that runs on your own machine. It reads the top pages and returns only the passages that answer the question, with sources. REST API and MCP.">
+<meta property="og:title" content="Trovia: local web search for AI agents">
+<meta property="og:description" content="Give your agent the web, with sources. Runs on your machine; free to start.">
+<meta property="og:url" content="https://abyssalwolf.github.io/trovia/">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&amp;family=Schibsted+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0;background:#FFFFFF}
+a{color:#141414;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:4px}
+a:hover{color:#000000}
+pre{margin:0}
+h1,h2,h3{text-wrap:balance}
+p,li,dd{text-wrap:pretty}
+mark{background:#FFD3C2;color:#141414;padding:0 0.12em;border-radius:3px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+a:focus-visible,button:focus-visible{outline:2px solid #141414;outline-offset:3px}
+::selection{background:#FFD3C2;color:#141414}
+.funnel{grid-template-columns:repeat(3,minmax(0,1fr))}
+.funnel>div{padding:8px 32px;border-right:1.5px solid #CFCEC7}
+.funnel>div:first-child{padding-left:0}
+.funnel>div:last-child{padding-right:0;border-right:none}
+@media (max-width:860px){.funnel{grid-template-columns:minmax(0,1fr)}.funnel>div,.funnel>div:first-child,.funnel>div:last-child{padding:22px 0;border-right:none;border-top:1.5px solid #CFCEC7}.funnel>div:first-child{border-top:none;padding-top:0}}
+.steps{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:960px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:540px){.steps{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<div style="--accent: #E8471F; background: #FFFFFF; color: #141414; font-family: 'Schibsted Grotesk', system-ui, sans-serif; font-size: 17px; line-height: 1.6; min-height: 100vh">
+
+<header style="border-bottom: 1px solid #E3E2DD">
+<div style="max-width: 1200px; margin: 0 auto; padding: 16px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px">
+<a href="#top" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #141414">
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#E8471F"></rect><path d="M8.5 9.5h11M14 9.5v10" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 23px; letter-spacing: -0.02em">trovia</span>
+</a>
+<nav aria-label="Main" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; font-size: 15px; font-weight: 500">
+<a href="#how" style="text-decoration: none; color: #3D4044; padding: 10px 0">How it works</a>
+<a href="#setup" style="text-decoration: none; color: #3D4044; padding: 10px 0">Setup</a>
+<a href="#connect" style="text-decoration: none; color: #3D4044; padding: 10px 0">MCP &amp; REST</a>
+<a href="#skills" style="text-decoration: none; color: #3D4044; padding: 10px 0">Skills</a>
+<a href="https://github.com/Abyssalwolf/trovia/tree/main/docs" style="text-decoration: none; color: #3D4044; padding: 10px 0">Docs</a>
+<a href="https://github.com/Abyssalwolf/trovia" style="text-decoration: none; color: #141414; border: 1.5px solid #141414; padding: 8px 16px; border-radius: 999px; font-weight: 600">GitHub</a>
+</nav>
+</div>
+</header>
+
+<main id="top">
+
+<section aria-labelledby="hero-title" style="max-width: 1200px; margin: 0 auto; padding: 72px 24px 88px; display: flex; flex-direction: column; gap: 56px">
+<h1 id="hero-title" style="margin: 0; max-width: 15ch; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(52px, 8.2vw, 96px); line-height: 0.98; letter-spacing: -0.035em">Give your agent the web. <mark>With sources.</mark></h1>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 48px; align-items: start">
+<div style="display: flex; flex-direction: column; gap: 24px; min-width: 0">
+<p style="margin: 0; font-size: 21px; line-height: 1.5; color: #3D4044; max-width: 34ch">Trovia searches, reads the top pages, and hands back only the passages that answer the question, cited. It runs on your own machine. No account, and no API key to start.</p>
+
+<div data-install="" style="background: #FFFFFF; border: 1.5px solid #141414; border-radius: 16px; overflow: hidden">
+<div role="group" aria-label="Choose your system" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px 10px 0 10px">
+<button type="button" data-os="unix" aria-pressed="true" style="font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; padding: 10px 14px; min-height: 44px; border-radius: 999px; border: none; background: #141414; color: #FFFFFF">macOS / Linux</button>
+<button type="button" data-os="windows" aria-pressed="false" style="font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; padding: 10px 14px; min-height: 44px; border-radius: 999px; border: none; background: transparent; color: #3D4044">Windows</button>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 16px 12px 16px 20px">
+<code style="flex: 1 1 300px; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-family: 'JetBrains Mono', monospace; font-size: 15px; line-height: 1.55; color: #141414"><span aria-hidden="true" data-prompt="" style="color: #5C6066; user-select: none">$ </span><span data-command="">curl -LsSf https://abyssalwolf.github.io/trovia/install.sh | sh</span></code>
+<button type="button" data-copy="" aria-label="Copy install command" style="flex: none; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; min-height: 46px; padding: 0 20px; border-radius: 999px; border: none; background: #E8471F; color: #141414">Copy</button>
+</div>
+<p aria-live="polite" data-copy-status="" style="margin: 0; padding: 0; font-size: 14px; color: #3D4044"></p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px; font-size: 15px; color: #3D4044">
+<p style="margin: 0">Then run <code style="font-family: 'JetBrains Mono', monospace; color: #141414">trovia</code>. A short setup asks for optional API keys and your defaults. Needs no Python of your own.</p>
+<p style="margin: 0"><a data-script-link="" href="https://github.com/Abyssalwolf/trovia/blob/main/scripts/install.sh">Read <span data-script-name="">install.sh</span></a> before you run it. Open source, Apache 2.0. Remove it any time with <code style="font-family: 'JetBrains Mono', monospace; color: #141414">uv tool uninstall trovia</code>.</p>
+</div>
+</div>
+
+<figure style="margin: 0; min-width: 0; background: #F3F2EF; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 22px">
+<figcaption style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #141414; overflow-wrap: anywhere"><span aria-hidden="true" style="color: #5C6066">$ </span>trovia search "tokio mutex vs std mutex in async code" --depth advanced</figcaption>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<p style="margin: 0; font-size: 14px; font-weight: 600; color: #3D4044">Read 8 pages</p>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px">
+<li style="font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 5px 10px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E3E2DD; color: #3D4044">tokio.rs</li>
+<li style="font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 5px 10px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E3E2DD; color: #3D4044">users.rust-lang.org</li>
+<li style="font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 5px 10px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E3E2DD; color: #3D4044">stackoverflow.com</li>
+<li style="font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 5px 10px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E3E2DD; color: #3D4044">docs.rs</li>
+<li style="font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 5px 10px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E3E2DD; color: #3D4044">github.com</li>
+<li style="font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 5px 10px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E3E2DD; color: #3D4044">rustfaq.org</li>
+<li style="font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 5px 10px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E3E2DD; color: #3D4044">rust-dd.com</li>
+<li style="font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 5px 10px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E3E2DD; color: #3D4044">linkedin.com</li>
+</ul>
+</div>
+<div style="background: #FFFFFF; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 1px 2px rgba(20,20,20,0.06), 0 8px 24px rgba(20,20,20,0.06)">
+<p style="margin: 0; font-size: 14px; font-weight: 600; color: #3D4044">Kept the passages that answer it</p>
+<p style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #5C6066; overflow-wrap: anywhere">## Source: Shared state | Tokio (tokio.rs/tokio/tutorial/shared-state)</p>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: #141414">...<mark>a blocking mutex inside async code is fine as long as contention remains low</mark>...</p>
+<p style="margin: 0; font-size: 14px; color: #5C6066">and 11 more passages, each under its own source</p>
+</div>
+</figure>
+</div>
+
+<p style="margin: 0; display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 15px; font-weight: 600; color: #3D4044">
+<span>Free to start: DuckDuckGo built in</span>
+<span>REST API and MCP</span>
+<span>Runs on a laptop CPU</span>
+<span>A fallback at every stage</span>
+</p>
+</section>
+
+<section id="how" aria-labelledby="how-title" style="background: #F3F2EF">
+<div style="max-width: 1200px; margin: 0 auto; padding: 104px 24px 96px; display: flex; flex-direction: column; gap: 56px">
+<div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+<h2 id="how-title" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(36px, 5vw, 64px); line-height: 1.02; letter-spacing: -0.03em">Ten links in, a few good paragraphs out.</h2>
+<p style="margin: 0; font-size: 19px; color: #3D4044">A normal search engine hands your agent links and leaves the reading to it. Trovia does the reading. Here is what that looked like on real advanced searches.</p>
+</div>
+<dl class="funnel" style="margin: 0; display: grid; gap: 0">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<dt style="order: 2; font-size: 17px; font-weight: 600">pages read</dt>
+<dd style="order: 1; margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(64px, 9vw, 96px); line-height: 1; letter-spacing: -0.04em; color: #E8471F">8</dd>
+<dd style="order: 3; margin: 0; font-size: 15px; color: #5C6066">fetched directly, or through Jina Reader when a site resists</dd>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<dt style="order: 2; font-size: 17px; font-weight: 600">passages scored</dt>
+<dd style="order: 1; margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(64px, 9vw, 96px); line-height: 1; letter-spacing: -0.04em; color: #E8471F">148–215</dd>
+<dd style="order: 3; margin: 0; font-size: 15px; color: #5C6066">every passage ranked against your question, in about 0.3 s on a laptop CPU</dd>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<dt style="order: 2; font-size: 17px; font-weight: 600">kept</dt>
+<dd style="order: 1; margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(64px, 9vw, 96px); line-height: 1; letter-spacing: -0.04em; color: #E8471F">12</dd>
+<dd style="order: 3; margin: 0; font-size: 15px; color: #5C6066">the best passages, at most two from any one page, each with its source</dd>
+</div>
+</dl>
+<ol class="steps" style="list-style: none; margin: 0; padding: 0; display: grid; gap: 28px">
+<li style="border-top: 1.5px solid #141414; padding-top: 16px; display: flex; flex-direction: column; gap: 6px">
+<h3 style="margin: 0; font-size: 18px; font-weight: 700"><span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 400; color: #5C6066; margin-right: 8px">1</span>Search</h3>
+<p style="margin: 0; font-size: 15px; color: #3D4044">Brave, then Serper, then your SearXNG, then DuckDuckGo. If one fails or runs out of quota, the next takes over.</p>
+</li>
+<li style="border-top: 1.5px solid #141414; padding-top: 16px; display: flex; flex-direction: column; gap: 6px">
+<h3 style="margin: 0; font-size: 18px; font-weight: 700"><span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 400; color: #5C6066; margin-right: 8px">2</span>Read</h3>
+<p style="margin: 0; font-size: 15px; color: #3D4044">Each page becomes clean Markdown. If a page can't be read, its search snippet stands in.</p>
+</li>
+<li style="border-top: 1.5px solid #141414; padding-top: 16px; display: flex; flex-direction: column; gap: 6px">
+<h3 style="margin: 0; font-size: 18px; font-weight: 700"><span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 400; color: #5C6066; margin-right: 8px">3</span>Split</h3>
+<p style="margin: 0; font-size: 15px; color: #3D4044">Passages of about 800 characters. Code blocks stay whole, and the search snippet counts as a passage too.</p>
+</li>
+<li style="border-top: 1.5px solid #141414; padding-top: 16px; display: flex; flex-direction: column; gap: 6px">
+<h3 style="margin: 0; font-size: 18px; font-weight: 700"><span style="font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 400; color: #5C6066; margin-right: 8px">4</span>Rerank</h3>
+<p style="margin: 0; font-size: 15px; color: #3D4044">A 3 MB model on your CPU keeps the best. About 100 MB of memory idle, around 400 MB in use.</p>
+</li>
+</ol>
+</div>
+</section>
+
+<section id="setup" aria-labelledby="setup-title" style="max-width: 1200px; margin: 0 auto; padding: 112px 24px 40px; display: flex; flex-direction: column; gap: 48px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 48px; align-items: end">
+<h2 id="setup-title" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(36px, 5vw, 64px); line-height: 1.02; letter-spacing: -0.03em">Set it up once. Change it any time.</h2>
+<p style="margin: 0; font-size: 18px; color: #3D4044">The first run asks for optional API keys and three defaults, each with a recommended value. Keys are hidden as you type and checked with one real search. Later, <code style="font-family: 'JetBrains Mono', monospace; color: #141414">trovia config</code> changes anything, and a running service picks it up on the next search.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 48px; align-items: start">
+<figure style="margin: 0; min-width: 0; background: #F3F2EF; border-radius: 20px; overflow: hidden">
+<figcaption style="padding: 14px 22px; border-bottom: 1px solid #E3E2DD; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #5C6066">trovia setup</figcaption>
+<pre style="padding: 22px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.8; color: #3D4044"><span style="color: #141414; font-weight: 500">Step 1 of 2: search providers</span>
+Brave Search API key (Enter to skip; typing is hidden):
+  Checking the key (uses 1 search)...
+  <span style="color: #1E7A43">Key works.</span>
+Serper API key (Enter to skip; typing is hidden):
+Jina API key (optional) (Enter to skip; typing is hidden):
+
+<span style="color: #141414; font-weight: 500">Step 2 of 2: defaults for every search</span>
+Passages returned per search (top_k) [recommended: 6]:
+Passages to rerank [recommended: 300; 0 = all]:
+Passages allowed from one page [recommended: 2]:
+
+Model ready.
+Search order: <span style="color: #141414; font-weight: 500">brave -&gt; ddgs</span></pre>
+</figure>
+<div style="display: flex; flex-direction: column; gap: 18px; min-width: 0">
+<h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">The defaults we recommend</h3>
+<dl style="margin: 0; display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 14px 0; border-top: 1.5px solid #141414">
+<dt style="color: #3D4044">Passages returned per search</dt>
+<dd style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 28px; line-height: 1">6</dd>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 14px 0; border-top: 1px solid #E3E2DD">
+<dt style="color: #3D4044">Passages scored by the reranker</dt>
+<dd style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 28px; line-height: 1">300</dd>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 14px 0; border-top: 1px solid #E3E2DD; border-bottom: 1px solid #E3E2DD">
+<dt style="color: #3D4044">Most passages from one page</dt>
+<dd style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 28px; line-height: 1">2</dd>
+</div>
+</dl>
+<p style="margin: 0; font-size: 15px; color: #5C6066">Advanced searches read at least eight pages and return twice as many passages. Every search can override all three.</p>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 20px; padding-top: 24px">
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 760px">
+<h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">Start free. Add a key when it matters.</h3>
+<p style="margin: 0; font-size: 16px; color: #3D4044">Trovia tries your providers in order and skips any you have not set up.</p>
+</div>
+<div style="overflow-x: auto; border: 1px solid #E3E2DD; border-radius: 16px">
+<table style="width: 100%; min-width: 640px; border-collapse: collapse; font-size: 15px">
+<thead>
+<tr style="background: #F3F2EF; text-align: left">
+<th scope="col" style="padding: 16px 20px; font-weight: 700">Provider</th>
+<th scope="col" style="padding: 16px 20px; font-weight: 700">Needs</th>
+<th scope="col" style="padding: 16px 20px; font-weight: 700">Good to know</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-top: 1px solid #E3E2DD">
+<th scope="row" style="padding: 16px 20px; text-align: left; font-weight: 600">DuckDuckGo</th>
+<td style="padding: 16px 20px; color: #3D4044">Nothing. Built in.</td>
+<td style="padding: 16px 20px; color: #3D4044">Free and best-effort. It can rate-limit you for a minute or two.</td>
+</tr>
+<tr style="border-top: 1px solid #E3E2DD">
+<th scope="row" style="padding: 16px 20px; text-align: left; font-weight: 600">Brave Search</th>
+<td style="padding: 16px 20px; color: #3D4044">API key</td>
+<td style="padding: 16px 20px; color: #3D4044">A monthly credit covers roughly 1,000 searches; a card is required. Trovia stops at your monthly cap.</td>
+</tr>
+<tr style="border-top: 1px solid #E3E2DD">
+<th scope="row" style="padding: 16px 20px; text-align: left; font-weight: 600">Serper</th>
+<td style="padding: 16px 20px; color: #3D4044">API key</td>
+<td style="padding: 16px 20px; color: #3D4044">Google results. New accounts get a free starter allowance.</td>
+</tr>
+<tr style="border-top: 1px solid #E3E2DD">
+<th scope="row" style="padding: 16px 20px; text-align: left; font-weight: 600">SearXNG</th>
+<td style="padding: 16px 20px; color: #3D4044">Docker</td>
+<td style="padding: 16px 20px; color: #3D4044">Optional and self-hosted, for advanced setups. Queries several engines at once.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="connect" aria-labelledby="connect-title" style="max-width: 1200px; margin: 0 auto; padding: 112px 24px 40px; display: flex; flex-direction: column; gap: 40px">
+<h2 id="connect-title" style="margin: 0; max-width: 16ch; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(36px, 5vw, 64px); line-height: 1.02; letter-spacing: -0.03em">One line for MCP. One request for REST.</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 48px">
+<article style="min-width: 0; display: flex; flex-direction: column; gap: 16px; border-top: 1.5px solid #141414; padding-top: 22px">
+<h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.02em">MCP</h3>
+<p style="margin: 0; font-size: 16px; color: #3D4044">Claude Code, Claude Desktop or any MCP client gets a web_search tool. The service does not even need to be running.</p>
+<pre style="background: #F3F2EF; border-radius: 12px; padding: 18px 20px; white-space: pre-wrap; overflow-wrap: anywhere; font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #141414">claude mcp add trovia -- trovia mcp</pre>
+<pre style="background: #F3F2EF; border-radius: 12px; padding: 18px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #3D4044">web_search(
+  query,
+  search_depth="basic",      <span style="color: #5C6066"># or "advanced"</span>
+  max_chunks=None,           <span style="color: #5C6066"># your default: 6</span>
+  max_chunks_per_page=None,  <span style="color: #5C6066"># your default: 2</span>
+)</pre>
+<a href="https://github.com/Abyssalwolf/trovia/blob/main/docs/mcp.md" style="align-self: flex-start; font-size: 16px; font-weight: 600">MCP guide</a>
+</article>
+<article style="min-width: 0; display: flex; flex-direction: column; gap: 16px; border-top: 1.5px solid #141414; padding-top: 22px">
+<h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.02em">REST API</h3>
+<p style="margin: 0; font-size: 16px; color: #3D4044">Run trovia and call it from anything that speaks HTTP. Interactive docs live at /docs.</p>
+<pre style="background: #F3F2EF; border-radius: 12px; padding: 18px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #141414">curl -X POST http://localhost:8000/v1/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "tokio mutex vs std mutex"}'</pre>
+<pre style="background: #F3F2EF; border-radius: 12px; padding: 18px 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.7; color: #3D4044">{
+  "search_provider_used": "brave",
+  "synthesized_context": "## Source: ...",
+  "results": [ ... ],
+  "error": null
+}</pre>
+<a href="https://github.com/Abyssalwolf/trovia/blob/main/docs/rest-api.md" style="align-self: flex-start; font-size: 16px; font-weight: 600">REST reference</a>
+</article>
+</div>
+</section>
+
+<section id="skills" aria-labelledby="skills-title" style="max-width: 1200px; margin: 0 auto; padding: 112px 24px 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 48px; align-items: start">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<h2 id="skills-title" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(36px, 5vw, 64px); line-height: 1.02; letter-spacing: -0.03em">Teach your agent to use it.</h2>
+<p style="margin: 0; font-size: 18px; color: #3D4044; max-width: 46ch">Two ready-made agent skills. Unzip one into your agent's skills folder (for Claude Code, ~/.claude/skills/) and the agent knows when to search, which options to pick, and to cite what it finds.</p>
+</div>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column">
+<li style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding: 22px 0; border-top: 1.5px solid #141414">
+<div style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 260px">
+<h3 style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 500">trovia-mcp</h3>
+<p style="margin: 0; font-size: 15px; color: #3D4044">Installs Trovia with your permission, registers the MCP server, and uses the web_search tool well.</p>
+</div>
+<a href="skills/trovia-mcp.zip" download="" style="text-decoration: none; padding: 11px 20px; border-radius: 999px; border: 1.5px solid #141414; color: #141414; font-weight: 600; font-size: 15px">Download</a>
+</li>
+<li style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding: 22px 0; border-top: 1px solid #E3E2DD; border-bottom: 1px solid #E3E2DD">
+<div style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 260px">
+<h3 style="margin: 0; font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 500">trovia-rest-api</h3>
+<p style="margin: 0; font-size: 15px; color: #3D4044">Calls the REST API directly from scripts or any HTTP client, and handles errors the way Trovia reports them.</p>
+</div>
+<a href="skills/trovia-rest-api.zip" download="" style="text-decoration: none; padding: 11px 20px; border-radius: 999px; border: 1.5px solid #141414; color: #141414; font-weight: 600; font-size: 15px">Download</a>
+</li>
+</ul>
+</section>
+
+<section id="limits" aria-labelledby="limits-title" style="max-width: 1200px; margin: 0 auto; padding: 112px 24px 112px; display: flex; flex-direction: column; gap: 36px">
+<h2 id="limits-title" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(36px, 5vw, 64px); line-height: 1.02; letter-spacing: -0.03em">What it does not do.</h2>
+<ul style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 28px">
+<li style="border-top: 1.5px solid #141414; padding-top: 16px; display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 17px; font-weight: 700">No JavaScript rendering</strong><span style="font-size: 15px; color: #3D4044">Pages that only appear after scripts run fall back to Jina, then to their snippet.</span></li>
+<li style="border-top: 1.5px solid #141414; padding-top: 16px; display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 17px; font-weight: 700">Not instant</strong><span style="font-size: 15px; color: #3D4044">A fresh search takes about 4 to 11 seconds, mostly reading pages. Repeats come from the cache in milliseconds.</span></li>
+<li style="border-top: 1.5px solid #141414; padding-top: 16px; display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 17px; font-weight: 700">Local only</strong><span style="font-size: 15px; color: #3D4044">No authentication. It listens on 127.0.0.1 and refuses requests from other host names.</span></li>
+<li style="border-top: 1.5px solid #141414; padding-top: 16px; display: flex; flex-direction: column; gap: 6px"><strong style="font-size: 17px; font-weight: 700">Python 3.11 to 3.14</strong><span style="font-size: 15px; color: #3D4044">The installer finds or downloads a compatible one for you.</span></li>
+</ul>
+</section>
+
+<section id="start" aria-labelledby="start-title" style="background: var(--accent)">
+<div style="max-width: 1200px; margin: 0 auto; padding: 104px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 48px; align-items: start">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<h2 id="start-title" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(40px, 6vw, 80px); line-height: 0.98; letter-spacing: -0.035em; color: #141414">Two commands and your agent can search.</h2>
+<p style="margin: 0; font-size: 18px; font-weight: 500; color: #141414">Free to start, no account, and open source under Apache 2.0.</p>
+</div>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 28px; min-width: 0">
+<li style="display: flex; flex-direction: column; gap: 12px; min-width: 0">
+<p style="margin: 0; font-size: 18px; font-weight: 700; color: #141414"><span style="font-family: 'JetBrains Mono', monospace; font-weight: 500; margin-right: 10px">1</span>Install Trovia</p>
+<div data-install="" style="background: #FFFFFF; border-radius: 16px; overflow: hidden">
+<div role="group" aria-label="Choose your system" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px 10px 0 10px">
+<button type="button" data-os="unix" aria-pressed="true" style="font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; padding: 10px 14px; min-height: 44px; border-radius: 999px; border: none; background: #141414; color: #FFFFFF">macOS / Linux</button>
+<button type="button" data-os="windows" aria-pressed="false" style="font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; padding: 10px 14px; min-height: 44px; border-radius: 999px; border: none; background: transparent; color: #3D4044">Windows</button>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 16px 12px 16px 20px">
+<code style="flex: 1 1 300px; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-family: 'JetBrains Mono', monospace; font-size: 15px; line-height: 1.55; color: #141414"><span aria-hidden="true" data-prompt="" style="color: #5C6066; user-select: none">$ </span><span data-command="">curl -LsSf https://abyssalwolf.github.io/trovia/install.sh | sh</span></code>
+<button type="button" data-copy="" aria-label="Copy install command" style="flex: none; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; min-height: 46px; padding: 0 20px; border-radius: 999px; border: none; background: #141414; color: #FFFFFF">Copy</button>
+</div>
+<p aria-live="polite" data-copy-status="" style="margin: 0; padding: 0; font-size: 14px; color: #3D4044"></p>
+</div>
+</li>
+<li style="display: flex; flex-direction: column; gap: 12px; min-width: 0">
+<p style="margin: 0; font-size: 18px; font-weight: 700; color: #141414"><span style="font-family: 'JetBrains Mono', monospace; font-weight: 500; margin-right: 10px">2</span>Connect your agent</p>
+<pre style="background: #FFFFFF; border-radius: 12px; padding: 18px 20px; white-space: pre-wrap; overflow-wrap: anywhere; font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #141414">claude mcp add trovia -- trovia mcp</pre>
+<p style="margin: 0; font-size: 16px; font-weight: 500; color: #141414">Not using MCP? Run <code style="font-family: 'JetBrains Mono', monospace">trovia</code> and call the REST API on localhost:8000.</p>
+</li>
+</ol>
+</div>
+</section>
+
+</main>
+
+<footer style="background: #141414; color: #E6E5E0">
+<div style="max-width: 1200px; margin: 0 auto; padding: 36px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px 32px; font-size: 14px">
+<p style="margin: 0">Trovia is open source under the Apache 2.0 license. Not affiliated with Brave, Serper, DuckDuckGo or Jina.</p>
+<nav aria-label="Footer" style="display: flex; flex-wrap: wrap; gap: 8px 22px">
+<a href="https://github.com/Abyssalwolf/trovia" style="color: #E6E5E0">GitHub</a>
+<a href="https://github.com/Abyssalwolf/trovia/tree/main/docs" style="color: #E6E5E0">Docs</a>
+<a href="https://pypi.org/project/trovia/" style="color: #E6E5E0">PyPI</a>
+<a href="https://github.com/Abyssalwolf/trovia/blob/main/LICENSE" style="color: #E6E5E0">License</a>
+</nav>
+</div>
+</footer>
+
+</div>
+<script>
+(function () {
+  var scripts = {
+    unix: { name: 'install.sh', prompt: '$', command: 'curl -LsSf https://abyssalwolf.github.io/trovia/install.sh | sh' },
+    windows: { name: 'install.ps1', prompt: 'PS>', command: 'irm https://abyssalwolf.github.io/trovia/install.ps1 | iex' }
+  };
+  var source = 'https://github.com/Abyssalwolf/trovia/blob/main/scripts/';
+  var current = 'unix';
+  var timer;
+  function each(selector, fn) { Array.prototype.forEach.call(document.querySelectorAll(selector), fn); }
+
+  function clearStatus() {
+    each('[data-copy-status]', function (p) { p.textContent = ''; p.style.padding = '0'; });
+    each('[data-copy]', function (b) { b.textContent = 'Copy'; });
+  }
+
+  function setOS(os) {
+    current = os;
+    var s = scripts[os];
+    each('[data-os]', function (b) {
+      var on = b.getAttribute('data-os') === os;
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.style.background = on ? '#141414' : 'transparent';
+      b.style.color = on ? '#FFFFFF' : '#3D4044';
+    });
+    each('[data-command]', function (e) { e.textContent = s.command; });
+    each('[data-prompt]', function (e) { e.textContent = s.prompt + ' '; });
+    each('[data-script-link]', function (a) { a.href = source + s.name; });
+    each('[data-script-name]', function (e) { e.textContent = s.name; });
+    clearStatus();
+  }
+
+  function selectText(node) {
+    if (!node || !window.getSelection) return;
+    var range = document.createRange();
+    range.selectNodeContents(node);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  function copy(button) {
+    var box = button.closest('[data-install]');
+    var status = box.querySelector('[data-copy-status]');
+    var command = scripts[current].command;
+    function show(text, label) {
+      clearStatus();
+      status.textContent = text;
+      status.style.padding = '0 20px 14px';
+      button.textContent = label;
+      clearTimeout(timer);
+      timer = setTimeout(clearStatus, 5000);
+    }
+    function failed() {
+      selectText(box.querySelector('[data-command]'));
+      show('Could not copy automatically. The command is selected: press Ctrl+C (Cmd+C on a Mac).', 'Copy');
+    }
+    if (!navigator.clipboard || !navigator.clipboard.writeText) { failed(); return; }
+    navigator.clipboard.writeText(command).then(function () {
+      show('Copied. Paste it into your terminal.', 'Copied');
+    }, failed);
+  }
+
+  each('[data-os]', function (b) { b.addEventListener('click', function () { setOS(b.getAttribute('data-os')); }); });
+  each('[data-copy]', function (b) { b.addEventListener('click', function () { copy(b); }); });
+  if (/Windows/i.test(navigator.userAgent)) setOS('windows');
+})();
+</script>
+</body>
+</html>

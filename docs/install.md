@@ -9,13 +9,13 @@ installed first.
 **macOS and Linux**
 
 ```bash
-curl -LsSf https://YOUR-SITE/install.sh | sh
+curl -LsSf https://abyssalwolf.github.io/trovia/install.sh | sh
 ```
 
 **Windows (PowerShell)**
 
 ```powershell
-irm https://YOUR-SITE/install.ps1 | iex
+irm https://abyssalwolf.github.io/trovia/install.ps1 | iex
 ```
 
 Each installer:

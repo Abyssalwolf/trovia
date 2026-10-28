@@ -36,6 +36,12 @@ dependencies = [
     "tomli-w>=1.0",
 ]
 
+[project.urls]
+Homepage = "https://abyssalwolf.github.io/trovia/"
+Documentation = "https://github.com/Abyssalwolf/trovia/tree/main/docs"
+Repository = "https://github.com/Abyssalwolf/trovia"
+Issues = "https://github.com/Abyssalwolf/trovia/issues"
+
 [project.scripts]
 trovia = "trovia.cli:app"
 

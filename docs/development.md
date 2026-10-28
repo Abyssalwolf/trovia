@@ -6,6 +6,7 @@
 Searchable/                  (the repository folder; the product is called Trovia)
 ├── README.md
 ├── docs/                    this documentation
+├── site/                    the website (published with GitHub Pages)
 ├── skills/                  ready-made agent skills (REST API, MCP)
 ├── scripts/
 │   ├── install.sh           one-line installer for macOS and Linux
@@ -96,7 +97,22 @@ To run the installed command against throwaway config and data, set `TROVIA_CONF
 3. The `release` workflow builds the package and publishes it to PyPI using trusted publishing (no
    token is stored). Before the first release you must create the project on PyPI and register this
    repository and workflow as a trusted publisher (PyPI: project settings, Publishing).
-4. Host `scripts/install.sh` and `scripts/install.ps1` at the URLs your website shows.
+4. The website and installers need nothing extra: the `pages` workflow publishes `site/`, both
+   install scripts and the zipped skills to https://abyssalwolf.github.io/trovia/ whenever those files
+   change on `main`.
+
+## The website
+
+`site/` holds the static website (`index.html`, `favicon.svg`). The page was designed in Claude Design
+and converted to plain HTML, CSS and a little JavaScript (the OS switch and Copy buttons); it has no
+build step and no dependencies beyond Google Fonts. To preview it locally:
+
+```bash
+python -m http.server 8000 --directory site
+```
+
+The installers and skill downloads only exist on the published site, because the `pages` workflow adds
+them at deploy time.
 
 ## Common changes
 

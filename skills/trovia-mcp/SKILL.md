@@ -27,8 +27,8 @@ trovia --version
 If that prints a version, go to step 2. If the command is not found, tell the user it needs installing and
 get their go-ahead first:
 
-- macOS / Linux: `curl -LsSf https://YOUR-SITE/install.sh | sh`
-- Windows (PowerShell): `irm https://YOUR-SITE/install.ps1 | iex`
+- macOS / Linux: `curl -LsSf https://abyssalwolf.github.io/trovia/install.sh | sh`
+- Windows (PowerShell): `irm https://abyssalwolf.github.io/trovia/install.ps1 | iex`
 
 The installer asks a few setup questions (an optional Brave or Serper API key, and default settings), so it
 needs the user at the keyboard in a terminal. After installing, a new terminal may be needed so the

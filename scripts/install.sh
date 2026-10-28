@@ -1,7 +1,7 @@
 #!/bin/sh
 # Trovia installer for macOS and Linux.
 #
-#   curl -LsSf https://YOUR-SITE/install.sh | sh
+#   curl -LsSf https://abyssalwolf.github.io/trovia/install.sh | sh
 #
 # What it does (nothing needs sudo):
 #   1. installs uv (a Python tool installer from astral.sh) if you don't have it

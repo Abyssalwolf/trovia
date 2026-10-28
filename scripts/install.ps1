@@ -1,6 +1,6 @@
 # Trovia installer for Windows (PowerShell).
 #
-#   irm https://YOUR-SITE/install.ps1 | iex
+#   irm https://abyssalwolf.github.io/trovia/install.ps1 | iex
 #
 # What it does (no administrator rights needed):
 #   1. installs uv (a Python tool installer from astral.sh) if you don't have it

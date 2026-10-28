@@ -22,8 +22,8 @@ A healthy service answers `{"status":"ok"}`.
   the user asks, because it is a long-running process.
 - **`trovia: command not found`:** Trovia is not installed. Tell the user how to install it and wait for
   their go-ahead; do not run an installer without their permission:
-  - macOS / Linux: `curl -LsSf https://YOUR-SITE/install.sh | sh`
-  - Windows (PowerShell): `irm https://YOUR-SITE/install.ps1 | iex`
+  - macOS / Linux: `curl -LsSf https://abyssalwolf.github.io/trovia/install.sh | sh`
+  - Windows (PowerShell): `irm https://abyssalwolf.github.io/trovia/install.ps1 | iex`
 - **HTTP 400 "Invalid host header":** the service only answers to `localhost` and `127.0.0.1`. Use one of
   those in the URL.
 

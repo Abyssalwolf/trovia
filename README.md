@@ -21,13 +21,13 @@ question -> search providers -> read the pages -> split into passages -> rerank 
 **macOS and Linux**
 
 ```bash
-curl -LsSf https://YOUR-SITE/install.sh | sh
+curl -LsSf https://abyssalwolf.github.io/trovia/install.sh | sh
 ```
 
 **Windows (PowerShell)**
 
 ```powershell
-irm https://YOUR-SITE/install.ps1 | iex
+irm https://abyssalwolf.github.io/trovia/install.ps1 | iex
 ```
 
 The installer sets up `trovia` in its own isolated environment (you do not need Python installed) and
